@@ -16,8 +16,6 @@ T_STR_NAME *  readArchitecture(char * path, T_STR_NAME * strArch)
         char archname[20];
 
 	int fd;			// file descriptor to read the binary/executable/linkable file
-	unsigned short int index_str_t=0 , index_symbol_table=0,index_string_t=0;
-
 
         strArch->ArchName = malloc(strArch->noOfElement * sizeof(char*));
 
@@ -54,7 +52,7 @@ T_STR_NAME *  readArchitecture(char * path, T_STR_NAME * strArch)
 		case EM_386  :  strcpy(archname,"x86"); break;
 		case EM_68K  :  strcpy(archname,"M68000");break;
 		case EM_88K  :  strcpy(archname,"M88000");break;
-		case EM_MIPS :  strcpy(archname,"MIPSRS3000");break;
+		case EM_MIPS :  strcpy(archname,"MIPS");break;
                 case 183:       strcpy(archname,"ARM_64"); break;
 		case 40 :       strcpy(archname,"ARM_32");break;
 		case 50 :       strcpy(archname,"IA-64");break;

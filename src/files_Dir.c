@@ -1,16 +1,11 @@
 #include <dirent.h> 
 #include <stdio.h> 
 #include <string.h>
-#include <stdint.h>
-#include <stdlib.h>
+
+#include"elf_header.h"
 
 #define FILE_NAME_SIZE 20
 
-typedef struct 
-{
-  uint8_t noOfElement;
-  char **strName;
-}T_STR_NAME;
 
 T_STR_NAME *  show_dir_content(char * path)
 {
@@ -23,7 +18,7 @@ T_STR_NAME *  show_dir_content(char * path)
   strArch = malloc(sizeof(T_STR_NAME));
 
   
-  strArch->strName = malloc(20 * sizeof(char*));
+  strArch->strName = malloc(sizeof(char*));
   strArch->noOfElement = 0 ;
 
   while ((dir = readdir(d)) != NULL) 
@@ -34,7 +29,8 @@ T_STR_NAME *  show_dir_content(char * path)
         strcpy(strArch->strName[strArch->noOfElement], dir->d_name);
 
         strArch->noOfElement++; 
-        printf("%s\n", dir->d_name); 
+        strArch->strName = realloc(strArch->strName, (strArch->noOfElement+1) *sizeof(char*));
+        //printf("%s\n", dir->d_name); 
       }
    }
 
@@ -46,6 +42,7 @@ T_STR_NAME *  show_dir_content(char * path)
 int main(int argc, char **argv)
 {
    T_STR_NAME *strArch = NULL;
+   int invalidFiles;
 
    if(argc <= 1)
    {
@@ -54,14 +51,23 @@ int main(int argc, char **argv)
    }
 
   strArch = show_dir_content(argv[1]);
-  printf("Number of Element %d",strArch->noOfElement);
+
+  strArch = readArchitecture(argv[1] , strArch);
+
+  printf("Total number of libraries: %d\n",strArch->noOfElement - strArch->invalidFiles);
+
+  printf("File \t\t\t\t ArchType\n");
+  printf("==== \t\t\t\t =====\n");
   
   for(int i=0;i<strArch->noOfElement ; i++)
   {
-    printf("%s\n",strArch->strName[i]);
+    if( !strncmp(strArch->ArchName[i],"Invalid", 8))
+      continue;
+    printf("%s \t\t\t %s\n",strArch->strName[i], strArch->ArchName[i]);
   }
 
   free(strArch->strName);
+  free(strArch->ArchName);
   free(strArch);
 
   return(0);
