@@ -12,13 +12,4 @@ This is a simple C program to Read Architecture of a ELF
     * Pass the path to directory to test as argument
       $ ReadELf ./Libs
 
-## Example Output
 
-```python
-import ymath
-
-factorial = ymath.factorial(5)
-
-print(factorial)
-
-```
